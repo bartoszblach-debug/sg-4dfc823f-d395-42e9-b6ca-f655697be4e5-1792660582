@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { registerUser } from "@/services/authService";
@@ -61,7 +60,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <Layout title="Create Account - LinkShort">
+    <Layout title="Create Account - Shrink">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
           <Card>

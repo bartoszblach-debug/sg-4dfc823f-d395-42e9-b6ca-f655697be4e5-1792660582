@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -62,7 +61,7 @@ export default function DashboardPage() {
 
   if (authLoading) {
     return (
-      <Layout title="Dashboard - LinkShort">
+      <Layout title="Dashboard - Shrink">
         <div className="container mx-auto px-4 py-12 flex justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>

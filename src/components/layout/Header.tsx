@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { signOutUser } from "@/services/authService";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Home, LogIn, LogOut, User } from "lucide-react";
 
