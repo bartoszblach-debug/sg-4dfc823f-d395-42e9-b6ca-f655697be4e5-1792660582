@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from "next";
 import { getShortLink, recordLinkClick } from "@/services/linkService";
 
@@ -28,6 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
     // Record the click (don't await to avoid delaying the redirect)
     recordLinkClick(shortCode).catch(err => {
       console.error("Error recording link click:", err);
+      // Don't let click recording errors affect the redirect
     });
     
     // Redirect to the original URL

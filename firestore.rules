@@ -11,6 +11,9 @@ service cloud.firestore {
       // Only the owner can update or delete their links
       allow update, delete: if request.auth != null && 
                              resource.data.userId == request.auth.uid;
+                             
+      // Allow updating click count for any link
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['clicks', 'lastClickedAt']);
     }
   }
 }

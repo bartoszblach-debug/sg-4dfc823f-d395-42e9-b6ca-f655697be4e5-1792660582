@@ -30,8 +30,8 @@ export default function DashboardPage() {
       const userLinks = await getUserLinks(user.uid);
       setLinks(userLinks);
     } catch (err) {
-      console.error("Error fetching links:", err);
-      setError("Failed to load your links. Please try again.");
+      console.error("Error getting user links:", err);
+      setError("Failed to load your links. Please try again. If this persists, try refreshing the page.");
     } finally {
       setLoading(false);
     }

@@ -101,23 +101,44 @@ export const recordLinkClick = async (shortCode: string): Promise<void> => {
 // Get all links for a user
 export const getUserLinks = async (userId: string): Promise<ShortLink[]> => {
   try {
-    const linksQuery = query(
-      collection(db, LINKS_COLLECTION), 
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
-    );
-    
-    const querySnapshot = await getDocs(linksQuery);
-    const links: ShortLink[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      links.push(doc.data() as ShortLink);
-    });
-    
-    return links;
+    // First try with the composite query (requires index)
+    try {
+      const linksQuery = query(
+        collection(db, LINKS_COLLECTION), 
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc")
+      );
+      
+      const querySnapshot = await getDocs(linksQuery);
+      const links: ShortLink[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        links.push(doc.data() as ShortLink);
+      });
+      
+      return links;
+    } catch (indexError) {
+      console.error("Index error, falling back to simple query:", indexError);
+      
+      // If the index doesn't exist yet, fall back to a simple query without orderBy
+      const fallbackQuery = query(
+        collection(db, LINKS_COLLECTION), 
+        where("userId", "==", userId)
+      );
+      
+      const fallbackSnapshot = await getDocs(fallbackQuery);
+      const fallbackLinks: ShortLink[] = [];
+      
+      fallbackSnapshot.forEach((doc) => {
+        fallbackLinks.push(doc.data() as ShortLink);
+      });
+      
+      // Sort the results manually
+      return fallbackLinks.sort((a, b) => b.createdAt - a.createdAt);
+    }
   } catch (error) {
     console.error("Error getting user links:", error);
-    return [];
+    throw error; // Re-throw to allow proper error handling in the component
   }
 };
 
