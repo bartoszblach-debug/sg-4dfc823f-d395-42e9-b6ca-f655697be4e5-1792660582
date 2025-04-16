@@ -46,7 +46,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Layout title="Sign In - LinkShort">
+    <Layout title="Sign In - shrlink">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
           <Card>

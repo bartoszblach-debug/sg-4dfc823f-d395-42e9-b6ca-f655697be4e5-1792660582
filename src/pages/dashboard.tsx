@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
   if (authLoading) {
     return (
-      <Layout title="Dashboard - Shrink">
+      <Layout title="Dashboard - shrlink">
         <div className="container mx-auto px-4 py-12 flex justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>

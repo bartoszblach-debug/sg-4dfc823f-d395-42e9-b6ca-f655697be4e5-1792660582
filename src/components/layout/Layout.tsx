@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export function Layout({ 
   children, 
-  title = "Shrink - URL Shortener",
+  title = "shrlink - URL Shortener",
   description = "A simple and efficient URL shortener service"
 }: LayoutProps) {
   return (

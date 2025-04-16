@@ -60,7 +60,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <Layout title="Create Account - Shrink">
+    <Layout title="Create Account - shrlink">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
           <Card>
