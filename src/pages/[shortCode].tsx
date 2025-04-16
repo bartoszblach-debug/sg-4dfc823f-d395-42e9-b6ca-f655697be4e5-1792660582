@@ -3,14 +3,22 @@ import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { ShortLink } from "@/types";
+import { Layout } from "@/components/layout/Layout";
 
-// This component doesn't render anything visible
-// It's just a placeholder for the server-side redirect
+// This component will render a loading message if for some reason
+// the redirect doesn't happen immediately
 export default function RedirectPage() {
-  return null;
+  return (
+    <Layout title="Redirecting...">
+      <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold mb-4">Redirecting you...</h1>
+        <p>If you are not redirected automatically, please click the link you were trying to access again.</p>
+      </div>
+    </Layout>
+  );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const shortCode = params?.shortCode as string;
   
   if (!shortCode) {
@@ -40,7 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
     
     // Record the click (don't await to avoid delaying the redirect)
     try {
-      // Use a separate try/catch to prevent redirect failures if click tracking fails
       updateDoc(linkRef, {
         clicks: increment(1),
         lastClickedAt: Date.now()
@@ -48,16 +55,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
         console.error("Error recording link click:", err);
       });
     } catch (clickError) {
-      // Don't let click recording errors affect the redirect
       console.error("Error updating click count:", clickError);
     }
     
-    // Return a redirect instead of using res.writeHead
+    // Use a client-side redirect approach instead
     return {
+      props: {
+        redirectUrl: encodeURI(redirectUrl)
+      },
       redirect: {
         destination: redirectUrl,
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   } catch (error) {
     console.error("Error in redirect:", error);
