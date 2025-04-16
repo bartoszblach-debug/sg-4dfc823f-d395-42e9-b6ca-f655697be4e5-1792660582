@@ -85,43 +85,47 @@ export default function DashboardPage() {
   }
 
   return (
-    <Layout title="Dashboard - shrlink">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Dashboard</h1>
+    <Layout title='Dashboard - shrlink'>
+      <div className='container mx-auto px-4 py-8'>
+        <div className='max-w-4xl mx-auto'>
+          <h1 className='text-3xl font-bold text-gray-900 mb-8 border-b-2 border-blue-500 pb-2 inline-block'>Your Dashboard</h1>
           
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-            <TabsList>
-              <TabsTrigger value="links">Your Links</TabsTrigger>
-              <TabsTrigger value="create">Create New Link</TabsTrigger>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className='mb-8'>
+            <TabsList className='border-b border-gray-200 w-full mb-2'>
+              <TabsTrigger value='links' className='text-lg font-medium'>Your Links</TabsTrigger>
+              <TabsTrigger value='create' className='text-lg font-medium'>Create New Link</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="links">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4">Your Short Links</h2>
+            <TabsContent value='links'>
+              <div className='bg-white p-6 rounded-lg shadow-md border border-gray-200'>
+                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b border-gray-200 pb-2'>Your Short Links</h2>
                 
                 {error && (
-                  <Alert variant="destructive" className="mb-4">
+                  <Alert variant='destructive' className='mb-4'>
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
                 
                 {loading ? (
-                  <div className="flex justify-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                  <div className='flex justify-center py-8'>
+                    <Loader2 className='h-8 w-8 animate-spin text-blue-600' />
                   </div>
                 ) : links.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600 mb-4">You haven't created any links yet.</p>
-                    <Button onClick={switchToCreateTab}>
+                  <div className='text-center py-8'>
+                    <p className='text-gray-600 mb-4'>You haven't created any links yet.</p>
+                    <Button onClick={switchToCreateTab} size='lg' className='font-medium'>
                       Create your first link
                     </Button>
                   </div>
                 ) : (
                   <div>
-                    <div className="mb-4">
-                      <Button variant="outline" onClick={fetchLinks} className="text-sm">
-                        Refresh
+                    <div className='mb-6'>
+                      <Button 
+                        variant='outline' 
+                        onClick={fetchLinks} 
+                        className='font-medium flex items-center gap-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700'
+                      >
+                        <Loader2 className='h-4 w-4' /> Refresh
                       </Button>
                     </div>
                     
@@ -140,17 +144,18 @@ export default function DashboardPage() {
               </div>
             </TabsContent>
             
-            <TabsContent value="create">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4">Create a New Short Link</h2>
+            <TabsContent value='create'>
+              <div className='bg-white p-6 rounded-lg shadow-md border border-gray-200'>
+                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b border-gray-200 pb-2'>Create a New Short Link</h2>
                 <LinkShortener onLinkCreated={handleLinkCreated} />
-                <div className="mt-4 text-center">
+                <div className='mt-6 text-center'>
                   <Button 
-                    variant="link" 
+                    variant='link' 
                     onClick={() => {
                       fetchLinks();
                       switchToLinksTab();
                     }}
+                    className='text-blue-700 font-medium'
                   >
                     View your links
                   </Button>
