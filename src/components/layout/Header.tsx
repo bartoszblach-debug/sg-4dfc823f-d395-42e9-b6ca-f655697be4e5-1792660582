@@ -25,7 +25,7 @@ export function Header() {
             alt='shrlink Logo' 
             width={320} 
             height={120} 
-            className='h-24 w-auto' 
+            className='h-32 w-auto' 
           />
         </Link>
 
