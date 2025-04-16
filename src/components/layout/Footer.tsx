@@ -9,13 +9,13 @@ export function Footer() {
             </p>
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
+            <a href="/terms" className="text-gray-600 hover:text-blue-600 text-sm">
               Terms of Service
             </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
+            <a href="/privacy" className="text-gray-600 hover:text-blue-600 text-sm">
               Privacy Policy
             </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
+            <a href="/contact" className="text-gray-600 hover:text-blue-600 text-sm">
               Contact
             </a>
           </div>
