@@ -1,14 +1,18 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createShortLink, isShortCodeAvailable } from "@/services/linkService";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Check, Copy, Link as LinkIcon } from "lucide-react";
+import { Check, Copy, Link as LinkIcon, ExternalLink } from "lucide-react";
+import { useRouter } from "next/router";
 
-export function LinkShortener() {
+interface LinkShortenerProps {
+  onLinkCreated?: () => void;
+}
+
+export function LinkShortener({ onLinkCreated }: LinkShortenerProps) {
   const { user } = useAuth();
   const [originalUrl, setOriginalUrl] = useState("");
   const [customShortCode, setCustomShortCode] = useState("");
@@ -16,12 +20,26 @@ export function LinkShortener() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
+  
+  // Reset form when success message is shown
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setShortLink(null);
     setCopied(false);
+    setSuccess(false);
 
     // Validate URL
     if (!originalUrl) {
@@ -67,7 +85,24 @@ export function LinkShortener() {
 
       if (result) {
         const baseUrl = window.location.origin;
-        setShortLink(`${baseUrl}/${result.shortCode}`);
+        const fullShortUrl = `${baseUrl}/${result.shortCode}`;
+        setShortLink(fullShortUrl);
+        setSuccess(true);
+        
+        // Reset form
+        setOriginalUrl("");
+        setCustomShortCode("");
+        
+        // Call the onLinkCreated callback if provided
+        if (onLinkCreated) {
+          onLinkCreated();
+        }
+        
+        // If user is logged in and on the homepage, offer to go to dashboard
+        const isHomepage = router.pathname === "/";
+        if (user && isHomepage) {
+          // We'll show a button to go to dashboard in the UI
+        }
       } else {
         setError("Failed to create short link. Please try again.");
       }
@@ -85,6 +120,10 @@ export function LinkShortener() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+  
+  const goToDashboard = () => {
+    router.push("/dashboard");
   };
 
   return (

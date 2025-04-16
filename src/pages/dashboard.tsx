@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -58,6 +57,17 @@ export default function DashboardPage() {
 
   const switchToLinksTab = () => {
     setActiveTab("links");
+  };
+  
+  // Handle link creation in the dashboard
+  const handleLinkCreated = () => {
+    // Fetch the updated links
+    fetchLinks();
+    
+    // Switch to the links tab after a short delay
+    setTimeout(() => {
+      switchToLinksTab();
+    }, 1000);
   };
 
   if (authLoading) {
@@ -133,7 +143,7 @@ export default function DashboardPage() {
             <TabsContent value="create">
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-xl font-semibold mb-4">Create a New Short Link</h2>
-                <LinkShortener />
+                <LinkShortener onLinkCreated={handleLinkCreated} />
                 <div className="mt-4 text-center">
                   <Button 
                     variant="link" 
