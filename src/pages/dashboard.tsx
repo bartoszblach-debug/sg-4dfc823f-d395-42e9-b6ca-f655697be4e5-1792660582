@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -79,10 +80,10 @@ export default function DashboardPage() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Dashboard</h1>
           
-          <Tabs defaultValue={activeTab} className="mb-8">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
             <TabsList>
-              <TabsTrigger value="links" onClick={switchToLinksTab}>Your Links</TabsTrigger>
-              <TabsTrigger value="create" onClick={switchToCreateTab}>Create New Link</TabsTrigger>
+              <TabsTrigger value="links">Your Links</TabsTrigger>
+              <TabsTrigger value="create">Create New Link</TabsTrigger>
             </TabsList>
             
             <TabsContent value="links">
@@ -102,7 +103,7 @@ export default function DashboardPage() {
                 ) : links.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-gray-600 mb-4">You haven't created any links yet.</p>
-                    <Button onClick={() => document.querySelector('[data-value="create"]')?.click()}>
+                    <Button onClick={switchToCreateTab}>
                       Create your first link
                     </Button>
                   </div>
@@ -138,7 +139,7 @@ export default function DashboardPage() {
                     variant="link" 
                     onClick={() => {
                       fetchLinks();
-                      document.querySelector('[data-value="links"]')?.click();
+                      switchToLinksTab();
                     }}
                   >
                     View your links
