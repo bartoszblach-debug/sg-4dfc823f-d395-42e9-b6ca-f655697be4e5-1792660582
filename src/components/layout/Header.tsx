@@ -3,7 +3,7 @@ import { signOutUser } from "@/services/authService";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Home, LogIn, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Home, LogIn, LogOut, LayoutDashboard } from "lucide-react";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -23,9 +23,9 @@ export function Header() {
           <Image 
             src='/shrlink-ok-m9kd6d9h.png' 
             alt='shrlink Logo' 
-            width={240} 
-            height={80} 
-            className='h-20 w-auto'
+            width={320} 
+            height={120} 
+            className='h-24 w-auto' 
           />
         </Link>
 
@@ -40,7 +40,7 @@ export function Header() {
               {user ? (
                 <>
                   <Link href="/dashboard" className="flex items-center text-gray-600 hover:text-blue-600">
-                    <User className="h-5 w-5 mr-1" />
+                    <LayoutDashboard className="h-5 w-5 mr-1" />
                     <span>Dashboard</span>
                   </Link>
                   <Button variant="ghost" onClick={handleSignOut} className="flex items-center text-gray-600 hover:text-blue-600">
