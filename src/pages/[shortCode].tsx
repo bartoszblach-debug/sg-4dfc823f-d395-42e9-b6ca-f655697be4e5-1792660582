@@ -4,15 +4,25 @@ import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { ShortLink } from "@/types";
 import { Layout } from "@/components/layout/Layout";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-// This component will render a loading message if for some reason
-// the redirect doesn't happen immediately
-export default function RedirectPage() {
+// Client-side redirect component
+export default function RedirectPage({ redirectUrl }: { redirectUrl: string }) {
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Client-side redirect
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, [redirectUrl]);
+  
   return (
     <Layout title="Redirecting...">
       <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Redirecting you...</h1>
-        <p>If you are not redirected automatically, please click the link you were trying to access again.</p>
+        <p>If you are not redirected automatically, <a href={redirectUrl} className="text-blue-600 hover:underline">click here</a>.</p>
       </div>
     </Layout>
   );
@@ -58,14 +68,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       console.error("Error updating click count:", clickError);
     }
     
-    // Use a client-side redirect approach instead
+    // Return the redirect URL as a prop instead of using Next.js redirect
     return {
       props: {
-        redirectUrl: encodeURI(redirectUrl)
-      },
-      redirect: {
-        destination: redirectUrl,
-        permanent: false
+        redirectUrl
       }
     };
   } catch (error) {
