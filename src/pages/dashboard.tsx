@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { getUserLinks } from "@/services/linkService";
@@ -17,22 +17,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState("links");
 
-  useEffect(() => {
-    // Redirect if not authenticated
-    if (!authLoading && !user) {
-      router.push("/auth/login");
-    }
-  }, [user, authLoading, router]);
-
-  useEffect(() => {
-    // Fetch user's links
-    if (user) {
-      fetchLinks();
-    }
-  }, [user]);
-
-  const fetchLinks = async () => {
+  // Use useCallback to memoize the fetchLinks function
+  const fetchLinks = useCallback(async () => {
     if (!user) return;
     
     setLoading(true);
@@ -47,6 +35,28 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
+  }, [user]);
+
+  useEffect(() => {
+    // Redirect if not authenticated
+    if (!authLoading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, authLoading, router]);
+
+  useEffect(() => {
+    // Fetch user's links
+    if (user) {
+      fetchLinks();
+    }
+  }, [user, fetchLinks]);
+
+  const switchToCreateTab = () => {
+    setActiveTab("create");
+  };
+
+  const switchToLinksTab = () => {
+    setActiveTab("links");
   };
 
   if (authLoading) {
@@ -69,10 +79,10 @@ export default function DashboardPage() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Dashboard</h1>
           
-          <Tabs defaultValue="links" className="mb-8">
+          <Tabs defaultValue={activeTab} className="mb-8">
             <TabsList>
-              <TabsTrigger value="links">Your Links</TabsTrigger>
-              <TabsTrigger value="create">Create New Link</TabsTrigger>
+              <TabsTrigger value="links" onClick={switchToLinksTab}>Your Links</TabsTrigger>
+              <TabsTrigger value="create" onClick={switchToCreateTab}>Create New Link</TabsTrigger>
             </TabsList>
             
             <TabsContent value="links">
