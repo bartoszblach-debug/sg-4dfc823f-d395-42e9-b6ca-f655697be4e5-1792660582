@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/contexts/AuthContext";
 import { signOutUser } from "@/services/authService";
 import Link from "next/link";
