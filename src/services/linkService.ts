@@ -1,4 +1,3 @@
-
 import { db } from "@/lib/firebase";
 import { ShortLink } from "@/types";
 import { 
@@ -45,19 +44,24 @@ export const createShortLink = async (
       return null; // Short code is already taken
     }
     
-    const newLink: ShortLink = {
+    // Create the base link object without userId
+    const newLink: Omit<ShortLink, 'userId'> & { userId?: string } = {
       id: finalShortCode,
       originalUrl,
       shortCode: finalShortCode,
       createdAt: Date.now(),
-      userId: userId || undefined,
       clicks: 0
     };
+    
+    // Only add userId if it exists
+    if (userId) {
+      newLink.userId = userId;
+    }
     
     // Save to Firestore
     await setDoc(doc(db, LINKS_COLLECTION, finalShortCode), newLink);
     
-    return newLink;
+    return newLink as ShortLink;
   } catch (error) {
     console.error("Error creating short link:", error);
     return null;
