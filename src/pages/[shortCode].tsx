@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
@@ -20,17 +19,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
   }
   
   try {
+    console.log(`Attempting to redirect for shortCode: ${shortCode}`);
+    
     // Get the short link directly from Firestore
     const linkRef = doc(db, "shortLinks", shortCode);
     const linkSnap = await getDoc(linkRef);
     
     if (!linkSnap.exists()) {
+      console.log(`No document found for shortCode: ${shortCode}`);
       return {
         notFound: true
       };
     }
     
     const linkData = linkSnap.data() as ShortLink;
+    console.log(`Found document for shortCode: ${shortCode}, redirecting to: ${linkData.originalUrl}`);
     
     // Record the click (don't await to avoid delaying the redirect)
     try {

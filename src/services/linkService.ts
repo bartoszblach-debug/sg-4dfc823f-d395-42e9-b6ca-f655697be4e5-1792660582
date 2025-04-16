@@ -32,7 +32,7 @@ export const isShortCodeAvailable = async (shortCode: string): Promise<boolean> 
 // Create a new short link
 export const createShortLink = async (
   originalUrl: string, 
-  shortCode: string = "", 
+  shortCode: string = '', 
   userId?: string
 ): Promise<ShortLink | null> => {
   try {
@@ -59,11 +59,16 @@ export const createShortLink = async (
     }
     
     // Save to Firestore
-    await setDoc(doc(db, LINKS_COLLECTION, finalShortCode), newLink);
+    try {
+      await setDoc(doc(db, LINKS_COLLECTION, finalShortCode), newLink);
+    } catch (error) {
+      console.error('Error setting document in Firestore:', error);
+      throw error;
+    }
     
     return newLink as ShortLink;
   } catch (error) {
-    console.error("Error creating short link:", error);
+    console.error('Error creating short link:', error);
     return null;
   }
 };

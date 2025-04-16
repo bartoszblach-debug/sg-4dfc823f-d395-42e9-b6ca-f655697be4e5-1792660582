@@ -12,7 +12,7 @@ interface LinkShortenerProps {
   onLinkCreated?: () => void;
 }
 
-export function LinkShortener({ onLinkCreated }: LinkShortenerProps) {
+export function LinkShortener({ onLinkCreated }: { onLinkCreated?: () => void } = {}) {
   const { user } = useAuth();
   const [originalUrl, setOriginalUrl] = useState("");
   const [customShortCode, setCustomShortCode] = useState("");
@@ -39,26 +39,31 @@ export function LinkShortener({ onLinkCreated }: LinkShortenerProps) {
     setError(null);
     setShortLink(null);
     setCopied(false);
-    setSuccess(false);
 
     // Validate URL
     if (!originalUrl) {
-      setError("Please enter a URL");
+      setError('Please enter a URL');
       return;
+    }
+
+    // Add protocol if missing
+    let formattedUrl = originalUrl;
+    if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
+      formattedUrl = 'https://' + formattedUrl;
     }
 
     try {
       // Simple URL validation
-      new URL(originalUrl);
+      new URL(formattedUrl);
     } catch (err) {
-      setError("Please enter a valid URL");
+      setError('Please enter a valid URL');
       return;
     }
 
     // Validate custom short code if provided
     if (customShortCode) {
       if (!/^[a-zA-Z0-9-_]+$/.test(customShortCode)) {
-        setError("Custom short code can only contain letters, numbers, hyphens, and underscores");
+        setError('Custom short code can only contain letters, numbers, hyphens, and underscores');
         return;
       }
     }
@@ -70,7 +75,7 @@ export function LinkShortener({ onLinkCreated }: LinkShortenerProps) {
       if (customShortCode) {
         const isAvailable = await isShortCodeAvailable(customShortCode);
         if (!isAvailable) {
-          setError("This short code is already taken. Please choose another one.");
+          setError('This short code is already taken. Please choose another one.');
           setLoading(false);
           return;
         }
@@ -78,37 +83,25 @@ export function LinkShortener({ onLinkCreated }: LinkShortenerProps) {
 
       // Create short link
       const result = await createShortLink(
-        originalUrl,
+        formattedUrl,
         customShortCode,
         user?.uid
       );
 
       if (result) {
         const baseUrl = window.location.origin;
-        const fullShortUrl = `${baseUrl}/${result.shortCode}`;
-        setShortLink(fullShortUrl);
-        setSuccess(true);
-        
-        // Reset form
-        setOriginalUrl("");
-        setCustomShortCode("");
+        setShortLink(`${baseUrl}/${result.shortCode}`);
         
         // Call the onLinkCreated callback if provided
         if (onLinkCreated) {
           onLinkCreated();
         }
-        
-        // If user is logged in and on the homepage, offer to go to dashboard
-        const isHomepage = router.pathname === "/";
-        if (user && isHomepage) {
-          // We'll show a button to go to dashboard in the UI
-        }
       } else {
-        setError("Failed to create short link. Please try again.");
+        setError('Failed to create short link. Please try again.');
       }
     } catch (err) {
-      console.error("Error creating short link:", err);
-      setError("An error occurred. Please try again.");
+      console.error('Error creating short link:', err);
+      setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
