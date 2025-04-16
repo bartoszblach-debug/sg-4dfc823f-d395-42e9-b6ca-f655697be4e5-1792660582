@@ -1,3 +1,4 @@
+
 export function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 py-6">
@@ -5,7 +6,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <p className="text-gray-600 text-sm">
-              &copy; {new Date().getFullYear()} LinkShort. All rights reserved.
+              &copy; {new Date().getFullYear()} shrlink by 7p ai labs. All rights reserved.
             </p>
           </div>
           <div className="flex space-x-6">

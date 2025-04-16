@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -74,7 +75,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <Layout title="Dashboard - LinkShort">
+    <Layout title="Dashboard - shrlink">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Dashboard</h1>
