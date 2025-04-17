@@ -1,4 +1,3 @@
-
 import { auth } from "@/lib/firebase";
 import { User } from "@/types";
 import {
@@ -6,7 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  UserCredential
+  UserCredential,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 // Register a new user
@@ -49,4 +49,9 @@ export const onAuthStateChange = (callback: (user: User | null) => void): (() =>
       callback(null);
     }
   });
+};
+
+// Send password reset email
+export const sendPasswordReset = async (email: string): Promise<void> => {
+  return sendPasswordResetEmail(auth, email);
 };
