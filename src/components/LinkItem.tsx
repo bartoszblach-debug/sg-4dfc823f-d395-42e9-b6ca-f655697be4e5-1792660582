@@ -204,9 +204,13 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
                 </div>
               </div>
               
+              {/* Clicks counter in a separate line with more prominence */}
+              <div className='text-sm font-medium text-blue-700 bg-blue-50 px-3 py-1 rounded-md inline-block mb-2'>
+                Clicks: {link.clicks}
+              </div>
+              
               <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mb-2'>
                 <span>Created: {formatDate(link.createdAt)}</span>
-                <span>Clicks: {link.clicks}</span>
                 {link.lastClickedAt && (
                   <span>Last clicked: {formatDate(link.lastClickedAt)}</span>
                 )}
