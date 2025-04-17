@@ -186,67 +186,68 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
           </div>
         ) : (
           <div>
-            <div className='flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2'>
-              <div className='mb-2 sm:mb-0 w-full sm:w-auto'>
-                <h3 className='font-medium text-gray-900 truncate max-w-full'>
-                  {link.originalUrl}
-                </h3>
-                <div className='flex items-center mt-1 flex-wrap'>
-                  <div className='w-full sm:w-auto overflow-hidden text-ellipsis'>
-                    <a 
-                      href={fullShortUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-blue-600 hover:underline flex items-center mr-2 truncate'
-                    >
-                      {fullShortUrl}
-                    </a>
-                  </div>
+            <div className='flex flex-col mb-2'>
+              <h3 className='font-medium text-gray-900 truncate max-w-full'>
+                {link.originalUrl}
+              </h3>
+              
+              <div className='flex items-center mt-1 mb-2'>
+                <div className='flex-1 min-w-0 overflow-hidden text-ellipsis'>
+                  <a 
+                    href={fullShortUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-blue-600 hover:underline flex items-center truncate'
+                  >
+                    {fullShortUrl}
+                  </a>
+                </div>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={copyToClipboard}
+                  className='h-6 w-6 p-0 ml-1 flex-shrink-0'
+                >
+                  {copied ? <Check className='h-4 w-4' /> : <Copy className='h-4 w-4' />}
+                </Button>
+              </div>
+              
+              <div className='flex items-center justify-between'>
+                <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1'>
+                  <span>Created: {formatDate(link.createdAt)}</span>
+                  <span>Clicks: {link.clicks}</span>
+                  {link.lastClickedAt && (
+                    <span>Last clicked: {formatDate(link.lastClickedAt)}</span>
+                  )}
+                </div>
+                
+                <div className='flex space-x-1 flex-shrink-0'>
                   <Button
                     variant='ghost'
                     size='sm'
-                    onClick={copyToClipboard}
-                    className='h-6 w-6 p-0 mt-1 sm:mt-0'
+                    onClick={handleEdit}
+                    className='h-8 w-8 p-0'
                   >
-                    {copied ? <Check className='h-4 w-4' /> : <Copy className='h-4 w-4' />}
+                    <Edit className='h-4 w-4' />
                   </Button>
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    onClick={handleDelete}
+                    className='h-8 w-8 p-0 text-red-600 hover:text-red-700'
+                  >
+                    <Trash className='h-4 w-4' />
+                  </Button>
+                  <a
+                    href={link.originalUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='inline-flex items-center justify-center h-8 w-8 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  >
+                    <ExternalLink className='h-4 w-4' />
+                  </a>
                 </div>
               </div>
-              
-              <div className='flex space-x-1 mt-2 sm:mt-0'>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  onClick={handleEdit}
-                  className='h-8 w-8 p-0'
-                >
-                  <Edit className='h-4 w-4' />
-                </Button>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  onClick={handleDelete}
-                  className='h-8 w-8 p-0 text-red-600 hover:text-red-700'
-                >
-                  <Trash className='h-4 w-4' />
-                </Button>
-                <a
-                  href={link.originalUrl}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='inline-flex items-center justify-center h-8 w-8 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                >
-                  <ExternalLink className='h-4 w-4' />
-                </a>
-              </div>
-            </div>
-            
-            <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mt-2'>
-              <span>Created: {formatDate(link.createdAt)}</span>
-              <span>Clicks: {link.clicks}</span>
-              {link.lastClickedAt && (
-                <span>Last clicked: {formatDate(link.lastClickedAt)}</span>
-              )}
             </div>
           </div>
         )}
