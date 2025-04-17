@@ -202,14 +202,6 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
                     {fullShortUrl}
                   </a>
                 </div>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  onClick={copyToClipboard}
-                  className='h-6 w-6 p-0 ml-1 flex-shrink-0'
-                >
-                  {copied ? <Check className='h-4 w-4' /> : <Copy className='h-4 w-4' />}
-                </Button>
               </div>
               
               <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mb-2'>
@@ -221,6 +213,14 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
               </div>
               
               <div className='flex items-center space-x-2 mt-2 pt-2 border-t border-gray-100'>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={copyToClipboard}
+                  className='h-8 w-8 p-0'
+                >
+                  {copied ? <Check className='h-4 w-4' /> : <Copy className='h-4 w-4' />}
+                </Button>
                 <Button
                   variant='ghost'
                   size='sm'
