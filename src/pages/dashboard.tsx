@@ -88,17 +88,19 @@ export default function DashboardPage() {
     <Layout title='Dashboard - shrlink'>
       <div className='container mx-auto px-4 py-8'>
         <div className='max-w-4xl mx-auto'>
-          <h1 className='text-3xl font-bold text-gray-900 mb-8 border-b-2 border-blue-500 pb-2 inline-block'>Your Dashboard</h1>
+          <h1 className='text-4xl font-bold text-gray-900 mb-8 border-b-2 border-blue-600 pb-3 inline-block'>Your Dashboard</h1>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className='mb-8'>
-            <TabsList className='border-b border-gray-200 w-full mb-2'>
-              <TabsTrigger value='links' className='text-lg font-medium'>Your Links</TabsTrigger>
-              <TabsTrigger value='create' className='text-lg font-medium'>Create New Link</TabsTrigger>
+            <TabsList className='border-b-2 border-gray-300 w-full mb-4 p-1 bg-gray-50 rounded-t-lg'>
+              <TabsTrigger value='links' className='text-lg font-semibold px-6 py-2'>Your Links</TabsTrigger>
+              <TabsTrigger value='create' className='text-lg font-semibold px-6 py-2'>Create New Link</TabsTrigger>
             </TabsList>
             
             <TabsContent value='links'>
               <div className='bg-white p-6 rounded-lg shadow-md border border-gray-200'>
-                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b border-gray-200 pb-2'>Your Short Links</h2>
+                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b-2 border-blue-200 pb-3 flex items-center'>
+                  <span className='bg-blue-50 px-3 py-1 rounded-md'>Your Short Links</span>
+                </h2>
                 
                 {error && (
                   <Alert variant='destructive' className='mb-4'>
@@ -113,7 +115,7 @@ export default function DashboardPage() {
                 ) : links.length === 0 ? (
                   <div className='text-center py-8'>
                     <p className='text-gray-600 mb-4'>You haven't created any links yet.</p>
-                    <Button onClick={switchToCreateTab} size='lg' className='font-medium'>
+                    <Button onClick={switchToCreateTab} size='lg' className='font-medium bg-blue-600 hover:bg-blue-700'>
                       Create your first link
                     </Button>
                   </div>
@@ -123,9 +125,9 @@ export default function DashboardPage() {
                       <Button 
                         variant='outline' 
                         onClick={fetchLinks} 
-                        className='font-medium flex items-center gap-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700'
+                        className='font-medium flex items-center gap-2 bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 px-4 py-2 rounded-md shadow-sm'
                       >
-                        <Loader2 className='h-4 w-4' /> Refresh
+                        <Loader2 className='h-4 w-4' /> Refresh Links
                       </Button>
                     </div>
                     
@@ -146,7 +148,9 @@ export default function DashboardPage() {
             
             <TabsContent value='create'>
               <div className='bg-white p-6 rounded-lg shadow-md border border-gray-200'>
-                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b border-gray-200 pb-2'>Create a New Short Link</h2>
+                <h2 className='text-2xl font-bold mb-6 text-blue-700 border-b-2 border-blue-200 pb-3 flex items-center'>
+                  <span className='bg-blue-50 px-3 py-1 rounded-md'>Create a New Short Link</span>
+                </h2>
                 <LinkShortener onLinkCreated={handleLinkCreated} />
                 <div className='mt-6 text-center'>
                   <Button 
@@ -155,7 +159,7 @@ export default function DashboardPage() {
                       fetchLinks();
                       switchToLinksTab();
                     }}
-                    className='text-blue-700 font-medium'
+                    className='text-blue-700 font-medium text-lg hover:underline'
                   >
                     View your links
                   </Button>
