@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 
 export function Footer() {
@@ -7,7 +8,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <p className="text-gray-600 text-sm">
-              &copy; {new Date().getFullYear()} shrlink by 7p ai labs. All rights reserved.
+              &copy; {new Date().getFullYear()} shrlink by <a href="https://7pailabs.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">7p ai labs</a>. All rights reserved.
             </p>
           </div>
           <div className="flex space-x-6">
