@@ -204,9 +204,11 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
                 </div>
               </div>
               
-              <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mb-2'>
+              <div className='text-xs text-gray-500 flex flex-col gap-y-1 mb-2'>
                 <span>Created: {formatDate(link.createdAt)}</span>
-                <span>Clicks: {link.clicks}</span>
+                <span className='text-sm font-medium text-blue-700'>
+                  Clicks: {link.clicks}
+                </span>
                 {link.lastClickedAt && (
                   <span>Last clicked: {formatDate(link.lastClickedAt)}</span>
                 )}
