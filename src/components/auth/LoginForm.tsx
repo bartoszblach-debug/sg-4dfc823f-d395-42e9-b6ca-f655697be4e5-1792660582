@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { signInUser } from "@/services/authService";
 import { useRouter } from "next/router";
@@ -79,7 +80,7 @@ export function LoginForm() {
               <label htmlFor="password" className="text-sm font-medium">
                 Password
               </label>
-              <Link href="#" className="text-sm text-blue-600 hover:underline">
+              <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
                 Forgot password?
               </Link>
             </div>
