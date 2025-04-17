@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ShortLink } from "@/types";
 import { updateShortLink, deleteShortLink, isShortCodeAvailable } from "@/services/linkService";
@@ -132,115 +131,117 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
   };
 
   return (
-    <Card className="mb-4">
-      <CardContent className="p-4">
+    <Card className='mb-4'>
+      <CardContent className='p-4'>
         {error && (
-          <Alert variant="destructive" className="mb-4">
+          <Alert variant='destructive' className='mb-4'>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
         
         {isEditing ? (
-          <div className="space-y-4">
+          <div className='space-y-4'>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Long URL
               </label>
               <Input
-                type="text"
+                type='text'
                 value={originalUrl}
                 onChange={(e) => setOriginalUrl(e.target.value)}
-                placeholder="https://example.com/very/long/url"
+                placeholder='https://example.com/very/long/url'
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Short Code
               </label>
               <Input
-                type="text"
+                type='text'
                 value={shortCode}
                 onChange={(e) => setShortCode(e.target.value)}
-                placeholder="my-link"
+                placeholder='my-link'
               />
             </div>
             
-            <div className="flex space-x-2">
+            <div className='flex flex-wrap gap-2'>
               <Button 
                 onClick={handleSave} 
                 disabled={loading}
-                className="flex items-center"
+                className='flex items-center'
               >
-                <Save className="h-4 w-4 mr-1" />
-                {loading ? "Saving..." : "Save"}
+                <Save className='h-4 w-4 mr-1' />
+                {loading ? 'Saving...' : 'Save'}
               </Button>
               <Button 
-                variant="outline" 
+                variant='outline' 
                 onClick={handleCancel}
-                className="flex items-center"
+                className='flex items-center'
               >
-                <X className="h-4 w-4 mr-1" />
+                <X className='h-4 w-4 mr-1' />
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
           <div>
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h3 className="font-medium text-gray-900 truncate max-w-md">
+            <div className='flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2'>
+              <div className='mb-2 sm:mb-0 w-full sm:w-auto'>
+                <h3 className='font-medium text-gray-900 truncate max-w-full'>
                   {link.originalUrl}
                 </h3>
-                <div className="flex items-center mt-1">
-                  <a 
-                    href={fullShortUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline flex items-center mr-2"
-                  >
-                    {fullShortUrl}
-                  </a>
+                <div className='flex items-center mt-1 flex-wrap'>
+                  <div className='w-full sm:w-auto overflow-hidden text-ellipsis'>
+                    <a 
+                      href={fullShortUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-blue-600 hover:underline flex items-center mr-2 truncate'
+                    >
+                      {fullShortUrl}
+                    </a>
+                  </div>
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant='ghost'
+                    size='sm'
                     onClick={copyToClipboard}
-                    className="h-6 w-6 p-0"
+                    className='h-6 w-6 p-0 mt-1 sm:mt-0'
                   >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copied ? <Check className='h-4 w-4' /> : <Copy className='h-4 w-4' />}
                   </Button>
                 </div>
               </div>
               
-              <div className="flex space-x-1">
+              <div className='flex space-x-1 mt-2 sm:mt-0'>
                 <Button
-                  variant="ghost"
-                  size="sm"
+                  variant='ghost'
+                  size='sm'
                   onClick={handleEdit}
-                  className="h-8 w-8 p-0"
+                  className='h-8 w-8 p-0'
                 >
-                  <Edit className="h-4 w-4" />
+                  <Edit className='h-4 w-4' />
                 </Button>
                 <Button
-                  variant="ghost"
-                  size="sm"
+                  variant='ghost'
+                  size='sm'
                   onClick={handleDelete}
-                  className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                  className='h-8 w-8 p-0 text-red-600 hover:text-red-700'
                 >
-                  <Trash className="h-4 w-4" />
+                  <Trash className='h-4 w-4' />
                 </Button>
                 <a
                   href={link.originalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center h-8 w-8 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='inline-flex items-center justify-center h-8 w-8 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className='h-4 w-4' />
                 </a>
               </div>
             </div>
             
-            <div className="text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mt-2">
+            <div className='text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1 mt-2'>
               <span>Created: {formatDate(link.createdAt)}</span>
               <span>Clicks: {link.clicks}</span>
               {link.lastClickedAt && (
