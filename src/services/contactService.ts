@@ -20,20 +20,23 @@ const contactService = {
       });
       
       // Send email notification using the API route - non-blocking
-      fetch('/api/send-contact-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          id: docRef.id // Pass the document ID to avoid duplicate storage
-        }),
-      }).catch(emailError => {
-        console.error('Error sending email notification:', emailError);
-        // Non-blocking, so we just log the error
-      });
+      // Use setTimeout to make it truly non-blocking for the UI
+      setTimeout(() => {
+        fetch('/api/send-contact-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formData,
+            id: docRef.id
+          }),
+        }).catch(emailError => {
+          console.error('Error sending email notification:', emailError);
+        });
+      }, 100);
       
+      // Return success immediately after storing in Firestore
       return { success: true, id: docRef.id };
     } catch (error) {
       console.error("Error submitting contact form:", error);
