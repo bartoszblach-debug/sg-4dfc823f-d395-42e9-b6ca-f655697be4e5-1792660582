@@ -19,19 +19,20 @@ const contactService = {
         status: "new"
       });
       
-      // Send email notification using the API route
-      try {
-        await fetch('/api/send-contact-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      } catch (emailError) {
+      // Send email notification using the API route - non-blocking
+      fetch('/api/send-contact-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          id: docRef.id // Pass the document ID to avoid duplicate storage
+        }),
+      }).catch(emailError => {
         console.error('Error sending email notification:', emailError);
-        // Continue even if email sending fails
-      }
+        // Non-blocking, so we just log the error
+      });
       
       return { success: true, id: docRef.id };
     } catch (error) {

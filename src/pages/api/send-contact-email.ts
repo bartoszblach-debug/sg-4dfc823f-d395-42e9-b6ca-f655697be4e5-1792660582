@@ -1,23 +1,26 @@
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-// Configure email transporter
-// Note: For production, use environment variables for these credentials
+// Configure email transporter with timeout settings
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER || "your-email@gmail.com", // Replace with your email or use env variable
     pass: process.env.EMAIL_PASSWORD || "your-app-password", // Use app password for Gmail
   },
+  // Add timeout settings to prevent long waits
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 10000      // 10 seconds
 });
 
 interface ContactFormData {
   name: string;
   email: string;
   message: string;
+  id?: string; // Optional document ID from Firestore
 }
 
 export default async function handler(
@@ -36,15 +39,8 @@ export default async function handler(
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Store in Firestore
-    const contactsRef = collection(db, "contacts");
-    const docRef = await addDoc(contactsRef, {
-      name,
-      email,
-      message,
-      createdAt: serverTimestamp(),
-      status: "new",
-    });
+    // Skip storing in Firestore again since it's already done in the service
+    // This prevents duplication and speeds up the process
 
     // Send email notification
     const mailOptions = {
@@ -60,13 +56,21 @@ export default async function handler(
       `,
     };
 
-    await transporter.sendMail(mailOptions);
-
-    return res.status(200).json({ 
-      success: true, 
-      id: docRef.id,
-      message: "Contact form submitted successfully and email sent" 
-    });
+    try {
+      await transporter.sendMail(mailOptions);
+      return res.status(200).json({ 
+        success: true,
+        message: "Email sent successfully" 
+      });
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+      // Still return success since the form data was saved to Firestore
+      return res.status(200).json({ 
+        success: true,
+        emailSent: false,
+        message: "Contact form submitted but email notification failed" 
+      });
+    }
   } catch (error) {
     console.error("Error processing contact form:", error);
     return res.status(500).json({ 
