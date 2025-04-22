@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, MapPin, Phone } from "lucide-react";
+import contactService from '@/services/contactService';
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -22,35 +22,31 @@ export default function ContactPage() {
     
     // Basic validation
     if (!name || !email || !message) {
-      setError("Please fill in all fields");
+      setError('Please fill in all fields');
       return;
     }
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
+      setError('Please enter a valid email address');
       return;
     }
     
     setLoading(true);
     
-    // Simulate form submission
     try {
-      // In a real application, you would send this data to your backend
-      // await sendContactForm({ name, email, message });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send the contact form data to Firebase
+      await contactService.submitContactForm({ name, email, message });
       
       // Reset form and show success message
-      setName("");
-      setEmail("");
-      setMessage("");
+      setName('');
+      setEmail('');
+      setMessage('');
       setSubmitted(true);
     } catch (err) {
-      console.error("Error submitting contact form:", err);
-      setError("Failed to send your message. Please try again later.");
+      console.error('Error submitting contact form:', err);
+      setError('Failed to send your message. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -145,7 +141,7 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-blue-600 mt-1 mr-3" />
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-gray-600">support@7pailabs.com/.com</p>
+                      <p className="text-gray-600">support@7pailabs.com</p>
                     </div>
                   </div>
                   
