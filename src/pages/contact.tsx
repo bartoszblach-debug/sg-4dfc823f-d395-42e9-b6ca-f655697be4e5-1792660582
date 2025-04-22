@@ -145,7 +145,7 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-blue-600 mt-1 mr-3" />
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-gray-600">support@shrlink.com</p>
+                      <p className="text-gray-600">support@7pailabs.com/.com</p>
                     </div>
                   </div>
                   
@@ -153,19 +153,14 @@ export default function ContactPage() {
                     <Phone className="h-5 w-5 text-blue-600 mt-1 mr-3" />
                     <div>
                       <h3 className="font-medium">Phone</h3>
-                      <p className="text-gray-600">+1 (555) 123-4567</p>
+                      <p className="text-gray-600">+48 (693) 822-857</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start">
                     <MapPin className="h-5 w-5 text-blue-600 mt-1 mr-3" />
                     <div>
-                      <h3 className="font-medium">Address</h3>
-                      <p className="text-gray-600">
-                        7p ai labs<br />
-                        123 Tech Street<br />
-                        San Francisco, CA 94107<br />
-                        United States
+                     
                       </p>
                     </div>
                   </div>
@@ -177,11 +172,11 @@ export default function ContactPage() {
                 <ul className="space-y-2">
                   <li className="flex justify-between">
                     <span className="text-gray-600">Monday - Friday:</span>
-                    <span>9:00 AM - 6:00 PM</span>
+                    <span>9:00 AM - 3:00 PM</span>
                   </li>
                   <li className="flex justify-between">
                     <span className="text-gray-600">Saturday:</span>
-                    <span>10:00 AM - 4:00 PM</span>
+                    <span>Closed</span>
                   </li>
                   <li className="flex justify-between">
                     <span className="text-gray-600">Sunday:</span>
