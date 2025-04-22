@@ -6,7 +6,9 @@ import {
   signOut,
   onAuthStateChanged,
   UserCredential,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "firebase/auth";
 
 // Register a new user
@@ -80,5 +82,26 @@ export const sendPasswordReset = async (email: string): Promise<void> => {
       throw new Error("Authentication service configuration error");
     }
     throw error;
+  }
+};
+
+// Sign in with Google
+export const signInWithGoogle = async (): Promise<UserCredential> => {
+  try {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
+  } catch (error: any) {
+    console.error("Google sign-in error:", error);
+    
+    // Enhanced error handling
+    if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") {
+      throw new Error("Sign-in was cancelled");
+    } else if (error.code === "auth/popup-blocked") {
+      throw new Error("Sign-in popup was blocked by your browser");
+    } else if (error.code === "auth/account-exists-with-different-credential") {
+      throw new Error("An account already exists with the same email address but different sign-in credentials");
+    } else {
+      throw error;
+    }
   }
 };
