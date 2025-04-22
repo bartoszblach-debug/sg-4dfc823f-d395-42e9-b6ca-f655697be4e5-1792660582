@@ -8,8 +8,7 @@ import {
   UserCredential,
   sendPasswordResetEmail,
   GoogleAuthProvider,
-  signInWithPopup,
-  browserPopupRedirectResolver
+  signInWithPopup
 } from "firebase/auth";
 
 // Register a new user
@@ -97,25 +96,27 @@ export const signInWithGoogle = async (): Promise<UserCredential> => {
     
     // Set custom parameters for the auth provider
     provider.setCustomParameters({
+      // Ensure we always get a fresh selection dialog
       prompt: 'select_account'
     });
     
-    // Use the popup with explicit resolver to avoid common issues
-    return await signInWithPopup(auth, provider, browserPopupRedirectResolver);
+    // Use signInWithPopup without the browserPopupRedirectResolver
+    // The resolver can cause issues in some environments
+    return await signInWithPopup(auth, provider);
   } catch (error: any) {
-    console.error("Google sign-in error:", error);
+    console.error('Google sign-in error:', error);
     
     // More detailed error handling
-    if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") {
-      throw new Error("Sign-in was cancelled");
-    } else if (error.code === "auth/popup-blocked") {
-      throw new Error("Sign-in popup was blocked by your browser");
-    } else if (error.code === "auth/account-exists-with-different-credential") {
-      throw new Error("An account already exists with the same email address but different sign-in credentials");
-    } else if (error.code === "auth/unauthorized-domain") {
-      throw new Error("This domain is not authorized for OAuth operations. Add your domain in the Firebase Console.");
-    } else if (error.code === "auth/operation-not-allowed") {
-      throw new Error("Google sign-in is not enabled. Enable it in the Firebase Console.");
+    if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+      throw new Error('Sign-in was cancelled');
+    } else if (error.code === 'auth/popup-blocked') {
+      throw new Error('Sign-in popup was blocked by your browser');
+    } else if (error.code === 'auth/account-exists-with-different-credential') {
+      throw new Error('An account already exists with the same email address but different sign-in credentials');
+    } else if (error.code === 'auth/unauthorized-domain') {
+      throw new Error('This domain is not authorized for OAuth operations. Add your domain in the Firebase Console.');
+    } else if (error.code === 'auth/operation-not-allowed') {
+      throw new Error('Google sign-in is not enabled. Enable it in the Firebase Console.');
     } else {
       // Pass the original error message for debugging
       throw new Error(`Google sign-in failed: ${error.message}`);

@@ -60,9 +60,11 @@ export function LoginForm() {
         // User cancelled the sign-in, no need to show error
         console.log('User cancelled the Google sign-in');
       } else if (err.message?.includes('This domain is not authorized')) {
-        setError('This domain is not authorized for Google sign-in. Please contact the administrator.');
+        setError('This domain is not authorized for Google sign-in. Please add this domain to your Firebase Console under Authentication > Sign-in method > Authorized domains.');
       } else if (err.message?.includes('Google sign-in is not enabled')) {
-        setError('Google sign-in is not enabled for this application. Please contact the administrator.');
+        setError('Google sign-in is not enabled for this application. Please enable it in the Firebase Console.');
+      } else if (err.message?.includes('popup-blocked')) {
+        setError('The sign-in popup was blocked by your browser. Please allow popups for this site.');
       } else {
         setError(err.message || 'Failed to sign in with Google');
       }
