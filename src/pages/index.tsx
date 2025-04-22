@@ -22,7 +22,7 @@ export default function HomePage() {
             <div className='bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow'>
               <h3 className='text-2xl font-bold mb-3 text-blue-700 border-b-2 border-blue-200 pb-2'>Quick & Easy</h3>
               <p className='text-gray-600'>
-                Create short links in seconds without any registration required.
+                Create short links in seconds without any payments.
               </p>
             </div>
             
