@@ -11,12 +11,30 @@ import {
 
 // Register a new user
 export const registerUser = async (email: string, password: string): Promise<UserCredential> => {
-  return createUserWithEmailAndPassword(auth, email, password);
+  try {
+    return await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error: any) {
+    // Enhanced error handling
+    if (error.code === "auth/invalid-api-key" || error.message?.includes("API key")) {
+      console.error("Firebase API key configuration error:", error);
+      throw new Error("Authentication service configuration error");
+    }
+    throw error;
+  }
 };
 
 // Sign in a user
 export const signInUser = async (email: string, password: string): Promise<UserCredential> => {
-  return signInWithEmailAndPassword(auth, email, password);
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (error: any) {
+    // Enhanced error handling
+    if (error.code === "auth/invalid-api-key" || error.message?.includes("API key")) {
+      console.error("Firebase API key configuration error:", error);
+      throw new Error("Authentication service configuration error");
+    }
+    throw error;
+  }
 };
 
 // Sign out the current user
@@ -53,5 +71,14 @@ export const onAuthStateChange = (callback: (user: User | null) => void): (() =>
 
 // Send password reset email
 export const sendPasswordReset = async (email: string): Promise<void> => {
-  return sendPasswordResetEmail(auth, email);
+  try {
+    return await sendPasswordResetEmail(auth, email);
+  } catch (error: any) {
+    // Enhanced error handling
+    if (error.code === "auth/invalid-api-key" || error.message?.includes("API key")) {
+      console.error("Firebase API key configuration error:", error);
+      throw new Error("Authentication service configuration error");
+    }
+    throw error;
+  }
 };
