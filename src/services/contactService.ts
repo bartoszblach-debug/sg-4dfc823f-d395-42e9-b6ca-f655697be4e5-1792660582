@@ -19,10 +19,9 @@ const contactService = {
         status: "new"
       });
       
-      // Send email notification using the API route - non-blocking
-      // Use setTimeout to make it truly non-blocking for the UI
-      setTimeout(() => {
-        fetch('/api/send-contact-email', {
+      // Send email notification using the API route
+      try {
+        const response = await fetch('/api/send-contact-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -31,12 +30,20 @@ const contactService = {
             ...formData,
             id: docRef.id
           }),
-        }).catch(emailError => {
-          console.error('Error sending email notification:', emailError);
         });
-      }, 100);
+        
+        const result = await response.json();
+        console.log('Email notification result:', result);
+        
+        if (!result.emailSent && result.success) {
+          console.warn('Contact form saved but email notification not sent. Check SendGrid configuration.');
+        }
+      } catch (emailError) {
+        console.error('Error sending email notification:', emailError);
+        // Continue execution - we don't want to fail the whole submission if just the email fails
+      }
       
-      // Return success immediately after storing in Firestore
+      // Return success after storing in Firestore
       return { success: true, id: docRef.id };
     } catch (error) {
       console.error("Error submitting contact form:", error);

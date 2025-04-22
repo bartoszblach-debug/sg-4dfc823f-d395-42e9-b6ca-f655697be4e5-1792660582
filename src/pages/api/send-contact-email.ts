@@ -2,8 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import sgMail from "@sendgrid/mail";
 
 // Configure SendGrid with API key
-if (process.env.SENDGRID_API_KEY) {
+if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY !== 'your-sendgrid-api-key-here') {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+} else {
+  console.warn('SendGrid API key not properly configured');
 }
 
 interface ContactFormData {
@@ -22,7 +24,7 @@ export default async function handler(
   }
 
   // Check if SendGrid API key is configured
-  if (!process.env.SENDGRID_API_KEY) {
+  if (!process.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY === 'your-sendgrid-api-key-here') {
     console.warn("SendGrid API key not configured. Email will not be sent.");
     return res.status(200).json({
       success: true,
