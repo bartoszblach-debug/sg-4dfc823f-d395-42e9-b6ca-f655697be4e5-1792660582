@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { sendPasswordReset } from "@/services/authService";
@@ -33,19 +34,11 @@ export default function ForgotPasswordPage() {
     } catch (err: any) {
       console.error("Password reset error:", err);
       
-      // Enhanced error handling with more specific messages
+      // Handle Firebase auth errors
       if (err.code === "auth/user-not-found") {
         setError("No account found with this email address");
-      } else if (err.code === "auth/invalid-email") {
-        setError("Please enter a valid email address");
-      } else if (err.code === "auth/network-request-failed") {
-        setError("Network error. Please check your connection and try again");
-      } else if (err.code === "auth/argument-error" || err.message?.includes("API key")) {
-        setError("Authentication configuration error. Please contact support");
-      } else if (err.code === "auth/too-many-requests") {
-        setError("Too many attempts. Please try again later");
       } else {
-        setError(`An error occurred: ${err.message || 'Unknown error'}`);
+        setError("An error occurred. Please try again");
       }
     } finally {
       setLoading(false);

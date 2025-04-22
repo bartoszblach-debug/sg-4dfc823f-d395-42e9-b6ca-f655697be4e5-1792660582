@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Mail, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import contactService from '@/services/contactService';
 
 export default function ContactPage() {
@@ -37,15 +37,13 @@ export default function ContactPage() {
     
     try {
       // Send the contact form data to Firebase
-      const result = await contactService.submitContactForm({ name, email, message });
+      await contactService.submitContactForm({ name, email, message });
       
       // Reset form and show success message
       setName('');
       setEmail('');
       setMessage('');
       setSubmitted(true);
-      
-      console.log('Form submission result:', result);
     } catch (err) {
       console.error('Error submitting contact form:', err);
       setError('Failed to send your message. Please try again later.');

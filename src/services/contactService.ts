@@ -21,29 +21,18 @@ const contactService = {
       
       // Send email notification using the API route
       try {
-        const response = await fetch('/api/send-contact-email', {
+        await fetch('/api/send-contact-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            ...formData,
-            id: docRef.id
-          }),
+          body: JSON.stringify(formData),
         });
-        
-        const result = await response.json();
-        console.log('Email notification result:', result);
-        
-        if (!result.emailSent && result.success) {
-          console.warn('Contact form saved but email notification not sent. Check SendGrid configuration.');
-        }
       } catch (emailError) {
         console.error('Error sending email notification:', emailError);
-        // Continue execution - we don't want to fail the whole submission if just the email fails
+        // Continue even if email sending fails
       }
       
-      // Return success after storing in Firestore
       return { success: true, id: docRef.id };
     } catch (error) {
       console.error("Error submitting contact form:", error);
