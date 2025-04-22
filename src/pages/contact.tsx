@@ -158,11 +158,7 @@ export default function ContactPage() {
                   </div>
                   
                   <div className="flex items-start">
-                    <MapPin className="h-5 w-5 text-blue-600 mt-1 mr-3" />
-                    <div>
-                     
-                      </p>
-                    </div>
+                    
                   </div>
                 </div>
               </div>
