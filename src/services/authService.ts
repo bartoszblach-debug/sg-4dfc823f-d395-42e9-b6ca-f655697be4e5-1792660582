@@ -8,7 +8,8 @@ import {
   UserCredential,
   sendPasswordResetEmail,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  browserPopupRedirectResolver
 } from "firebase/auth";
 
 // Register a new user
@@ -89,19 +90,35 @@ export const sendPasswordReset = async (email: string): Promise<void> => {
 export const signInWithGoogle = async (): Promise<UserCredential> => {
   try {
     const provider = new GoogleAuthProvider();
-    return await signInWithPopup(auth, provider);
+    
+    // Add scopes for additional permissions if needed
+    provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+    provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+    
+    // Set custom parameters for the auth provider
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
+    // Use the popup with explicit resolver to avoid common issues
+    return await signInWithPopup(auth, provider, browserPopupRedirectResolver);
   } catch (error: any) {
     console.error("Google sign-in error:", error);
     
-    // Enhanced error handling
+    // More detailed error handling
     if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") {
       throw new Error("Sign-in was cancelled");
     } else if (error.code === "auth/popup-blocked") {
       throw new Error("Sign-in popup was blocked by your browser");
     } else if (error.code === "auth/account-exists-with-different-credential") {
       throw new Error("An account already exists with the same email address but different sign-in credentials");
+    } else if (error.code === "auth/unauthorized-domain") {
+      throw new Error("This domain is not authorized for OAuth operations. Add your domain in the Firebase Console.");
+    } else if (error.code === "auth/operation-not-allowed") {
+      throw new Error("Google sign-in is not enabled. Enable it in the Firebase Console.");
     } else {
-      throw error;
+      // Pass the original error message for debugging
+      throw new Error(`Google sign-in failed: ${error.message}`);
     }
   }
 };

@@ -52,14 +52,19 @@ export function LoginForm() {
     
     try {
       await signInWithGoogle();
-      router.push("/dashboard");
+      router.push('/dashboard');
     } catch (err: any) {
-      console.error("Google sign-in error:", err);
+      console.error('Google sign-in error:', err);
       
-      if (err.message === "Sign-in was cancelled") {
+      if (err.message === 'Sign-in was cancelled') {
         // User cancelled the sign-in, no need to show error
+        console.log('User cancelled the Google sign-in');
+      } else if (err.message?.includes('This domain is not authorized')) {
+        setError('This domain is not authorized for Google sign-in. Please contact the administrator.');
+      } else if (err.message?.includes('Google sign-in is not enabled')) {
+        setError('Google sign-in is not enabled for this application. Please contact the administrator.');
       } else {
-        setError(err.message || "Failed to sign in with Google");
+        setError(err.message || 'Failed to sign in with Google');
       }
     } finally {
       setGoogleLoading(false);
