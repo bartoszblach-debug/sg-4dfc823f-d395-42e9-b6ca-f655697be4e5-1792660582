@@ -132,20 +132,33 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
   
   // Add new effect to periodically refresh link data
   useEffect(() => {
+    let isMounted = true;
+    
     const refreshLinkData = async () => {
-      const updatedLink = await getShortLink(link.shortCode);
-      if (updatedLink && updatedLink.clicks !== link.clicks) {
-        onUpdate();
+      try {
+        console.log('Refreshing link data for:', link.shortCode);
+        const updatedLink = await getShortLink(link.shortCode);
+        console.log('Current clicks:', link.clicks, 'Updated clicks:', updatedLink?.clicks);
+        
+        if (isMounted && updatedLink && updatedLink.clicks !== link.clicks) {
+          console.log('Updating UI with new click count');
+          onUpdate();
+        }
+      } catch (error) {
+        console.error('Error refreshing link data:', error);
       }
     };
     
     // Initial check
     refreshLinkData();
     
-    // Refresh every 5 seconds if the component is mounted
-    const interval = setInterval(refreshLinkData, 5000);
+    // Refresh every 2 seconds if the component is mounted
+    const interval = setInterval(refreshLinkData, 2000);
     
-    return () => clearInterval(interval);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [link.shortCode, link.clicks, onUpdate]);
   
   return (

@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -11,13 +10,18 @@ import { recordLinkClick } from "@/services/linkService";
 export default function RedirectPage({ redirectUrl, shortCode }: { redirectUrl: string; shortCode: string }) {
   useEffect(() => {
     const handleRedirect = async () => {
+      if (!redirectUrl || !shortCode) return;
+
       try {
         // First record the click
+        console.log('Recording click for shortCode:', shortCode);
         await recordLinkClick(shortCode);
-        console.log(`Click recorded successfully for ${shortCode}`);
+        console.log('Click recorded successfully, redirecting to:', redirectUrl);
         
-        // Then redirect
-        window.location.href = redirectUrl;
+        // Then redirect after a small delay to ensure the click is recorded
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 100);
       } catch (error) {
         console.error("Error recording click:", error);
         // Still redirect even if click recording fails
@@ -25,9 +29,7 @@ export default function RedirectPage({ redirectUrl, shortCode }: { redirectUrl: 
       }
     };
 
-    if (redirectUrl && shortCode) {
-      handleRedirect();
-    }
+    handleRedirect();
   }, [redirectUrl, shortCode]);
   
   return (
