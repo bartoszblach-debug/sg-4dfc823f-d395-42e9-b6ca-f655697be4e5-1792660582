@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
@@ -58,12 +57,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     
     // Record the click (don't await to avoid delaying the redirect)
     try {
-      updateDoc(linkRef, {
+      await updateDoc(linkRef, {
         clicks: increment(1),
         lastClickedAt: Date.now()
-      }).catch(err => {
-        console.error("Error recording link click:", err);
       });
+      console.log(`Click recorded for ${shortCode}`);
     } catch (clickError) {
       console.error("Error updating click count:", clickError);
     }
