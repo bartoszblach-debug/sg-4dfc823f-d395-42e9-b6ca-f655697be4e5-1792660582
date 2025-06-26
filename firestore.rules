@@ -2,23 +2,13 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Rules for shortLinks collection
+    // Allow anyone to read short links
     match /shortLinks/{shortCode} {
-      // Allow anyone to read short links (for redirection)
       allow read: if true;
-      
-      // Allow authenticated users to create links
-      allow create: if request.auth != null;
-      
-      // Allow users to update/delete only their own links
-      allow update, delete: if request.auth != null && 
-        (resource.data.userId == request.auth.uid || 
-         request.auth.uid == resource.data.userId);
-    }
-    
-    // Deny all other operations
-    match /{document=**} {
-      allow read, write: if false;
+      // Allow updates only to clicks and lastClickedAt fields
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['clicks', 'lastClickedAt']);
+      // Allow create/delete for authenticated users
+      allow create, delete: if request.auth != null;
     }
   }
 }

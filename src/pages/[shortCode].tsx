@@ -13,15 +13,11 @@ export default function RedirectPage({ redirectUrl, shortCode }: { redirectUrl: 
       if (!redirectUrl || !shortCode) return;
 
       try {
-        // First record the click
-        console.log('Recording click for shortCode:', shortCode);
+        // Record the click and wait for it to complete
         await recordLinkClick(shortCode);
-        console.log('Click recorded successfully, redirecting to:', redirectUrl);
         
-        // Then redirect after a small delay to ensure the click is recorded
-        setTimeout(() => {
-          window.location.href = redirectUrl;
-        }, 100);
+        // Then redirect
+        window.location.href = redirectUrl;
       } catch (error) {
         console.error("Error recording click:", error);
         // Still redirect even if click recording fails

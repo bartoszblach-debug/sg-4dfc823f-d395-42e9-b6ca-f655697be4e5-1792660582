@@ -99,23 +99,14 @@ export const recordLinkClick = async (shortCode: string): Promise<void> => {
     console.log('Starting click recording for:', shortCode);
     const linkRef = doc(db, LINKS_COLLECTION, shortCode);
     
-    // First get the current link data
-    const linkSnap = await getDoc(linkRef);
-    if (!linkSnap.exists()) {
-      console.error('Link not found for click recording:', shortCode);
-      return;
-    }
-    
-    const currentClicks = linkSnap.data()?.clicks || 0;
-    console.log('Current clicks:', currentClicks);
-    
     // Update the document with click count and timestamp
+    // Using a direct update without reading first to avoid race conditions
     await updateDoc(linkRef, {
       clicks: increment(1),
       lastClickedAt: Date.now()
     });
     
-    console.log('Click recorded successfully. New count should be:', currentClicks + 1);
+    console.log('Click recorded successfully');
   } catch (error) {
     console.error("Error recording link click:", error);
     throw error;
