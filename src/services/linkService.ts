@@ -58,18 +58,21 @@ export const createShortLink = async (
       newLink.userId = userId;
     }
     
-    // Save to Firestore
-    try {
-      await setDoc(doc(db, LINKS_COLLECTION, finalShortCode), newLink);
-    } catch (error) {
-      console.error('Error setting document in Firestore:', error);
-      throw error;
-    }
+    // Save to Firestore with better error handling
+    await setDoc(doc(db, LINKS_COLLECTION, finalShortCode), newLink);
     
     return newLink as ShortLink;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating short link:', error);
-    return null;
+    
+    // Provide specific error messages based on error type
+    if (error?.code === 'permission-denied') {
+      throw new Error("You don't have permission to create links. Please sign in and try again.");
+    } else if (error?.code === 'unavailable') {
+      throw new Error("Service temporarily unavailable. Please try again in a moment.");
+    } else {
+      throw new Error("Failed to create short link. Please try again.");
+    }
   }
 };
 
@@ -106,44 +109,51 @@ export const recordLinkClick = async (shortCode: string): Promise<void> => {
 // Get all links for a user
 export const getUserLinks = async (userId: string): Promise<ShortLink[]> => {
   try {
-    // First try with the composite query (requires index)
-    try {
-      const linksQuery = query(
-        collection(db, LINKS_COLLECTION), 
-        where("userId", "==", userId),
-        orderBy("createdAt", "desc")
-      );
+    // Use the indexed query with proper error handling
+    const linksQuery = query(
+      collection(db, LINKS_COLLECTION), 
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    
+    const querySnapshot = await getDocs(linksQuery);
+    const links: ShortLink[] = [];
+    
+    querySnapshot.forEach((doc) => {
+      links.push(doc.data() as ShortLink);
+    });
+    
+    return links;
+  } catch (error: any) {
+    // Check if it's an index error
+    if (error?.code === 'failed-precondition' || error?.message?.includes('index')) {
+      console.warn("Firestore index not ready yet, falling back to simple query:", error);
       
-      const querySnapshot = await getDocs(linksQuery);
-      const links: ShortLink[] = [];
-      
-      querySnapshot.forEach((doc) => {
-        links.push(doc.data() as ShortLink);
-      });
-      
-      return links;
-    } catch (indexError) {
-      console.error("Index error, falling back to simple query:", indexError);
-      
-      // If the index doesn't exist yet, fall back to a simple query without orderBy
-      const fallbackQuery = query(
-        collection(db, LINKS_COLLECTION), 
-        where("userId", "==", userId)
-      );
-      
-      const fallbackSnapshot = await getDocs(fallbackQuery);
-      const fallbackLinks: ShortLink[] = [];
-      
-      fallbackSnapshot.forEach((doc) => {
-        fallbackLinks.push(doc.data() as ShortLink);
-      });
-      
-      // Sort the results manually
-      return fallbackLinks.sort((a, b) => b.createdAt - a.createdAt);
+      try {
+        // Fallback to simple query without orderBy
+        const fallbackQuery = query(
+          collection(db, LINKS_COLLECTION), 
+          where("userId", "==", userId)
+        );
+        
+        const fallbackSnapshot = await getDocs(fallbackQuery);
+        const fallbackLinks: ShortLink[] = [];
+        
+        fallbackSnapshot.forEach((doc) => {
+          fallbackLinks.push(doc.data() as ShortLink);
+        });
+        
+        // Sort manually
+        return fallbackLinks.sort((a, b) => b.createdAt - a.createdAt);
+      } catch (fallbackError) {
+        console.error("Fallback query also failed:", fallbackError);
+        throw new Error("Unable to fetch your links. Please try again in a few moments.");
+      }
     }
-  } catch (error) {
+    
+    // For other errors, provide a user-friendly message
     console.error("Error getting user links:", error);
-    throw error; // Re-throw to allow proper error handling in the component
+    throw new Error("Failed to load your links. Please check your connection and try again.");
   }
 };
 
