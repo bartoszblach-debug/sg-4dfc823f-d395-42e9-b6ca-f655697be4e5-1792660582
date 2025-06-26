@@ -5,6 +5,7 @@ import { ShortLink } from "@/types";
 import { Layout } from "@/components/layout/Layout";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { recordLinkClick } from "@/services/linkService";
 
 // Client-side redirect component
 export default function RedirectPage({ redirectUrl }: { redirectUrl: string }) {
@@ -55,18 +56,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       redirectUrl = 'https://' + redirectUrl;
     }
     
-    // Record the click (don't await to avoid delaying the redirect)
+    // Record the click using the service function
     try {
-      await updateDoc(linkRef, {
-        clicks: increment(1),
-        lastClickedAt: Date.now()
-      });
-      console.log(`Click recorded for ${shortCode}`);
+      await recordLinkClick(shortCode);
+      console.log(`Click recorded successfully for ${shortCode}`);
     } catch (clickError) {
-      console.error("Error updating click count:", clickError);
+      console.error("Error recording click:", clickError);
     }
     
-    // Return the redirect URL as a prop instead of using Next.js redirect
     return {
       props: {
         redirectUrl

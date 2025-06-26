@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShortLink } from "@/types";
-import { updateShortLink, deleteShortLink, isShortCodeAvailable } from "@/services/linkService";
+import { updateShortLink, deleteShortLink, isShortCodeAvailable, getShortLink } from "@/services/linkService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -129,7 +129,22 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString();
   };
-
+  
+  // Add new effect to periodically refresh link data
+  useEffect(() => {
+    const refreshLinkData = async () => {
+      const updatedLink = await getShortLink(link.shortCode);
+      if (updatedLink && updatedLink.clicks !== link.clicks) {
+        onUpdate();
+      }
+    };
+    
+    // Refresh every 30 seconds if the component is mounted
+    const interval = setInterval(refreshLinkData, 30000);
+    
+    return () => clearInterval(interval);
+  }, [link.shortCode, link.clicks, onUpdate]);
+  
   return (
     <Card className='mb-4'>
       <CardContent className='p-4'>
