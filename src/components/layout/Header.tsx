@@ -28,11 +28,11 @@ export function Header() {
       <div className='container mx-auto px-4 flex justify-between items-center'>
         <Link href='/' className='flex items-center space-x-2'>
           <Image 
-            src='/shrlink-ok-m9kd6d9h.png' 
-            alt='shrlink Logo' 
-            width={320} 
-            height={120} 
-            className='h-32 w-auto' 
+            src='/betclic-1liga-logotyp-pion-rgb-mcd4q2gm.png' 
+            alt='Betclic 1 Liga Logo' 
+            width={200} 
+            height={80} 
+            className='h-16 w-auto' 
           />
         </Link>
 
