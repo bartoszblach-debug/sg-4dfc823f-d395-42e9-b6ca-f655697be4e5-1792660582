@@ -1,22 +1,34 @@
+
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { ShortLink } from "@/types";
 import { Layout } from "@/components/layout/Layout";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { recordLinkClick } from "@/services/linkService";
 
 // Client-side redirect component
-export default function RedirectPage({ redirectUrl }: { redirectUrl: string }) {
-  const router = useRouter();
-  
+export default function RedirectPage({ redirectUrl, shortCode }: { redirectUrl: string; shortCode: string }) {
   useEffect(() => {
-    // Client-side redirect
-    if (redirectUrl) {
-      window.location.href = redirectUrl;
+    const handleRedirect = async () => {
+      try {
+        // First record the click
+        await recordLinkClick(shortCode);
+        console.log(`Click recorded successfully for ${shortCode}`);
+        
+        // Then redirect
+        window.location.href = redirectUrl;
+      } catch (error) {
+        console.error("Error recording click:", error);
+        // Still redirect even if click recording fails
+        window.location.href = redirectUrl;
+      }
+    };
+
+    if (redirectUrl && shortCode) {
+      handleRedirect();
     }
-  }, [redirectUrl]);
+  }, [redirectUrl, shortCode]);
   
   return (
     <Layout title="Redirecting...">
@@ -56,17 +68,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       redirectUrl = 'https://' + redirectUrl;
     }
     
-    // Record the click using the service function
-    try {
-      await recordLinkClick(shortCode);
-      console.log(`Click recorded successfully for ${shortCode}`);
-    } catch (clickError) {
-      console.error("Error recording click:", clickError);
-    }
-    
     return {
       props: {
-        redirectUrl
+        redirectUrl,
+        shortCode
       }
     };
   } catch (error) {

@@ -97,12 +97,17 @@ export const getShortLink = async (shortCode: string): Promise<ShortLink | null>
 export const recordLinkClick = async (shortCode: string): Promise<void> => {
   try {
     const linkRef = doc(db, LINKS_COLLECTION, shortCode);
+    
+    // Update the document with click count and timestamp
     await updateDoc(linkRef, {
       clicks: increment(1),
       lastClickedAt: Date.now()
     });
+    
+    console.log("Click recorded successfully");
   } catch (error) {
     console.error("Error recording link click:", error);
+    throw error; // Rethrow to handle in component
   }
 };
 

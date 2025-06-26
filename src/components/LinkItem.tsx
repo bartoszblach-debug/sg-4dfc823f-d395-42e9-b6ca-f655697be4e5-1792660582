@@ -139,8 +139,11 @@ export function LinkItem({ link, userId, onUpdate }: LinkItemProps) {
       }
     };
     
-    // Refresh every 30 seconds if the component is mounted
-    const interval = setInterval(refreshLinkData, 30000);
+    // Initial check
+    refreshLinkData();
+    
+    // Refresh every 5 seconds if the component is mounted
+    const interval = setInterval(refreshLinkData, 5000);
     
     return () => clearInterval(interval);
   }, [link.shortCode, link.clicks, onUpdate]);
