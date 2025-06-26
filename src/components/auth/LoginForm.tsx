@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function LoginForm() {
@@ -98,14 +98,6 @@ export function LoginForm() {
           </Button>
         </form>
       </CardContent>
-      <CardFooter>
-        <div className="text-sm text-center w-full">
-          Don't have an account?{" "}
-          <Link href="/auth/register" className="text-blue-600 hover:underline">
-            Sign up
-          </Link>
-        </div>
-      </CardFooter>
     </Card>
   );
 }
